@@ -1,87 +1,20 @@
 import java.util.Scanner;
 
-class Node {
-    char data;
-    Node next;
+public class UseCase9RecursivePalindromeCheckerApp {
 
-    Node(char data) {
-        this.data = data;
-        this.next = null;
-    }
-}
+    // Recursive function to check palindrome
+    public static boolean isPalindrome(String str, int start, int end) {
 
-public class UseCase8PalindromeCheckerApp {
-
-    // Create linked list from string
-    public static Node createList(String str) {
-        Node head = null, tail = null;
-
-        for (char ch : str.toCharArray()) {
-            Node newNode = new Node(ch);
-
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-            }
-        }
-        return head;
-    }
-
-    // Reverse linked list
-    public static Node reverse(Node head) {
-        Node prev = null;
-        Node curr = head;
-
-        while (curr != null) {
-            Node next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
-        }
-        return prev;
-    }
-
-    // Check palindrome
-    public static boolean isPalindrome(Node head) {
-
-        if (head == null || head.next == null)
+        // Base condition
+        if (start >= end)
             return true;
 
-        Node slow = head;
-        Node fast = head;
+        // If characters don't match
+        if (str.charAt(start) != str.charAt(end))
+            return false;
 
-        // Find middle
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        Node secondHalf = reverse(slow);
-        Node firstHalf = head;
-
-        // Compare halves
-        while (secondHalf != null) {
-            if (firstHalf.data != secondHalf.data)
-                return false;
-
-            firstHalf = firstHalf.next;
-            secondHalf = secondHalf.next;
-        }
-
-        return true;
-    }
-
-    // Display linked list
-    public static void display(Node head) {
-        Node temp = head;
-        while (temp != null) {
-            System.out.print(temp.data + " -> ");
-            temp = temp.next;
-        }
-        System.out.println("null");
+        // Recursive call
+        return isPalindrome(str, start + 1, end - 1);
     }
 
     public static void main(String[] args) {
@@ -91,12 +24,9 @@ public class UseCase8PalindromeCheckerApp {
         System.out.print("Enter a string: ");
         String input = sc.nextLine();
 
-        Node head = createList(input);
+        boolean result = isPalindrome(input, 0, input.length() - 1);
 
-        System.out.println("Linked List:");
-        display(head);
-
-        if (isPalindrome(head))
+        if (result)
             System.out.println("The string is a Palindrome.");
         else
             System.out.println("The string is NOT a Palindrome.");
