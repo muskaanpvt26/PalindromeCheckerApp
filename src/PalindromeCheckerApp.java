@@ -1,54 +1,45 @@
 import java.util.*;
 
-// Strategy Interface
-interface PalindromeStrategy {
-    boolean checkPalindrome(String str);
-}
+public class UseCase13PalindromePerformanceApp {
 
-// Stack Strategy Implementation
-class StackStrategy implements PalindromeStrategy {
+    // Iterative approach
+    public static boolean iterativePalindrome(String str) {
+        int start = 0;
+        int end = str.length() - 1;
 
-    public boolean checkPalindrome(String str) {
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end))
+                return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
 
+    // Stack approach
+    public static boolean stackPalindrome(String str) {
         Stack<Character> stack = new Stack<>();
 
-        for (char c : str.toCharArray()) {
+        for (char c : str.toCharArray())
             stack.push(c);
-        }
 
-        for (char c : str.toCharArray()) {
-            if (c != stack.pop()) {
+        for (char c : str.toCharArray())
+            if (c != stack.pop())
                 return false;
-            }
-        }
 
         return true;
     }
-}
 
-// Deque Strategy Implementation
-class DequeStrategy implements PalindromeStrategy {
+    // Recursive approach
+    public static boolean recursivePalindrome(String str, int start, int end) {
+        if (start >= end)
+            return true;
 
-    public boolean checkPalindrome(String str) {
+        if (str.charAt(start) != str.charAt(end))
+            return false;
 
-        Deque<Character> deque = new LinkedList<>();
-
-        for (char c : str.toCharArray()) {
-            deque.addLast(c);
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-
-        return true;
+        return recursivePalindrome(str, start + 1, end - 1);
     }
-}
-
-// Main Application
-public class UseCase12StrategyPalindromeApp {
 
     public static void main(String[] args) {
 
@@ -57,26 +48,26 @@ public class UseCase12StrategyPalindromeApp {
         System.out.print("Enter a string: ");
         String input = sc.nextLine();
 
-        System.out.println("Choose Strategy:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
+        // Iterative timing
+        long start1 = System.nanoTime();
+        iterativePalindrome(input);
+        long end1 = System.nanoTime();
 
-        int choice = sc.nextInt();
+        // Stack timing
+        long start2 = System.nanoTime();
+        stackPalindrome(input);
+        long end2 = System.nanoTime();
 
-        PalindromeStrategy strategy;
+        // Recursive timing
+        long start3 = System.nanoTime();
+        recursivePalindrome(input, 0, input.length() - 1);
+        long end3 = System.nanoTime();
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        System.out.println("\nExecution Time Comparison:");
 
-        boolean result = strategy.checkPalindrome(input);
-
-        if (result)
-            System.out.println("The string is a Palindrome.");
-        else
-            System.out.println("The string is NOT a Palindrome.");
+        System.out.println("Iterative Method: " + (end1 - start1) + " ns");
+        System.out.println("Stack Method: " + (end2 - start2) + " ns");
+        System.out.println("Recursive Method: " + (end3 - start3) + " ns");
 
         sc.close();
     }
